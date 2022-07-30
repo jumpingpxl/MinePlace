@@ -1,4 +1,5 @@
 // Credits: Zeichenfolge
+
 package de.northernsi.mineplace.utils;
 
 import de.northernsi.mineplace.MinePlace;
@@ -11,156 +12,153 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class ConfigHandler {
-    private static ConfigHandler instance;
-    private String pluginDirPath = MinePlace.getInstance().getDataFolder().getPath();
 
-    public static ConfigHandler getInstance() {
-        if (ConfigHandler.instance == null) {
-            ConfigHandler.instance = new ConfigHandler();
-        }
+	private static ConfigHandler instance;
+	private final String pluginDirPath = MinePlace.getInstance().getDataFolder().getPath();
 
-        return ConfigHandler.instance;
-    }
+	public static ConfigHandler getInstance() {
+		if (ConfigHandler.instance == null) {
+			ConfigHandler.instance = new ConfigHandler();
+		}
 
-    public void createTeam(String teamName, UUID ownerUUID) {
-        setTeamMemberRole(teamName, ownerUUID, "owner");
-        addTeamToUser(teamName, ownerUUID);
-    }
+		return ConfigHandler.instance;
+	}
 
-    public void deleteTeam(String teamName, UUID ownerUUID) {
-        File file = new File(pluginDirPath, "teams/" + teamName + ".yml");
-        file.delete();
-        deleteUserFile(ownerUUID);
-    }
+	public void createTeam(String teamName, UUID ownerUUID) {
+		this.setTeamMemberRole(teamName, ownerUUID, "owner");
+		this.addTeamToUser(teamName, ownerUUID);
+	}
 
-    public String getTeamMemberRole(String teamName, UUID pUUID) {
-        File file = new File(pluginDirPath, "teams/" + teamName + ".yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+	public void deleteTeam(String teamName, UUID ownerUUID) {
+		File file = new File(this.pluginDirPath, "teams/" + teamName + ".yml");
+		file.delete();
+		this.deleteUserFile(ownerUUID);
+	}
 
-        return (String) cfg.getConfigurationSection("members").get(String.valueOf(pUUID));
-    }
+	public String getTeamMemberRole(String teamName, UUID pUUID) {
+		File file = new File(this.pluginDirPath, "teams/" + teamName + ".yml");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-    public void addTeamMember(String teamName, UUID pUUID) {
-        setTeamMemberRole(teamName, pUUID, "member");
-        addTeamToUser(teamName, pUUID);
-    }
+		return (String) cfg.getConfigurationSection("members").get(String.valueOf(pUUID));
+	}
 
-    private void addTeamToUser(String teamName, UUID pUUID) {
-        File file = new File(pluginDirPath, "users/" + pUUID + ".yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+	public void addTeamMember(String teamName, UUID pUUID) {
+		this.setTeamMemberRole(teamName, pUUID, "member");
+		this.addTeamToUser(teamName, pUUID);
+	}
 
-        if (cfg.getConfigurationSection("team") == null) {
-            cfg.createSection("team");
-        }
+	private void addTeamToUser(String teamName, UUID pUUID) {
+		File file = new File(this.pluginDirPath, "users/" + pUUID + ".yml");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-        ConfigurationSection teamSection = cfg.getConfigurationSection("team");
-        teamSection.set("name", teamName);
+		if (cfg.getConfigurationSection("team") == null) {
+			cfg.createSection("team");
+		}
 
-        try {
-            cfg.save(file);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+		ConfigurationSection teamSection = cfg.getConfigurationSection("team");
+		teamSection.set("name", teamName);
 
-    public void deleteUserFile(UUID pUUID) {
-        File file = new File(pluginDirPath, "users/" + pUUID + ".yml");
-        if (file.exists()) {
-            file.delete();
-        }
-    }
+		try {
+			cfg.save(file);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    public boolean existsTeam(String teamName) {
-        File file = new File(pluginDirPath, "teams/" + teamName + ".yml");
+	public void deleteUserFile(UUID pUUID) {
+		File file = new File(this.pluginDirPath, "users/" + pUUID + ".yml");
+		if (file.exists()) {
+			file.delete();
+		}
+	}
 
-        if (file.exists()) {
-            return true;
-        }
+	public boolean existsTeam(String teamName) {
+		File file = new File(this.pluginDirPath, "teams/" + teamName + ".yml");
 
-        return false;
-    }
+		return file.exists();
+	}
 
-    public void removeTeamMember(String teamName, UUID pUUID) {
-        File teamFile = new File(pluginDirPath, "teams/" + teamName + ".yml");
-        FileConfiguration teamCfg = YamlConfiguration.loadConfiguration(teamFile);
+	public void removeTeamMember(String teamName, UUID pUUID) {
+		File teamFile = new File(this.pluginDirPath, "teams/" + teamName + ".yml");
+		FileConfiguration teamCfg = YamlConfiguration.loadConfiguration(teamFile);
 
-        ConfigurationSection membersSection = teamCfg.getConfigurationSection("members");
-        membersSection.set(String.valueOf(pUUID), null);
+		ConfigurationSection membersSection = teamCfg.getConfigurationSection("members");
+		membersSection.set(String.valueOf(pUUID), null);
 
-        try {
-            teamCfg.save(teamFile);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+		try {
+			teamCfg.save(teamFile);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 
-        deleteUserFile(pUUID);
-    }
+		this.deleteUserFile(pUUID);
+	}
 
-    public String getTeamByUUID(UUID pUUID) {
-        File file = new File(pluginDirPath, "users/" + pUUID + ".yml");
+	public String getTeamByUUID(UUID pUUID) {
+		File file = new File(this.pluginDirPath, "users/" + pUUID + ".yml");
 
-        if (file.exists()) {
-            FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-            return (String) cfg.getConfigurationSection("team").get("name");
-        }
+		if (file.exists()) {
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			return (String) cfg.getConfigurationSection("team").get("name");
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public void banTeamMember(String teamName, UUID pUUID) {
-        setTeamMemberRole(teamName, pUUID, "banned");
-        deleteUserFile(pUUID);
-    }
+	public void banTeamMember(String teamName, UUID pUUID) {
+		this.setTeamMemberRole(teamName, pUUID, "banned");
+		this.deleteUserFile(pUUID);
+	}
 
-    private void setTeamMemberRole(String teamName, UUID pUUID, String role) {
-        File file = new File(pluginDirPath, "teams/" + teamName + ".yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+	private void setTeamMemberRole(String teamName, UUID pUUID, String role) {
+		File file = new File(this.pluginDirPath, "teams/" + teamName + ".yml");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-        if (cfg.getConfigurationSection("members") == null) {
-            cfg.createSection("members");
-        }
+		if (cfg.getConfigurationSection("members") == null) {
+			cfg.createSection("members");
+		}
 
-        ConfigurationSection membersSection = cfg.getConfigurationSection("members");
-        membersSection.set(String.valueOf(pUUID), role);
+		ConfigurationSection membersSection = cfg.getConfigurationSection("members");
+		membersSection.set(String.valueOf(pUUID), role);
 
-        try {
-            cfg.save(file);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+		try {
+			cfg.save(file);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    public void promoteTeamMember(String teamName, UUID pUUID) {
-        setTeamMemberRole(teamName, pUUID, "mod");
-    }
+	public void promoteTeamMember(String teamName, UUID pUUID) {
+		this.setTeamMemberRole(teamName, pUUID, "mod");
+	}
 
-    public void demoteTeamMember(String teamName, UUID pUUID) {
-        setTeamMemberRole(teamName, pUUID, "member");
-    }
+	public void demoteTeamMember(String teamName, UUID pUUID) {
+		this.setTeamMemberRole(teamName, pUUID, "member");
+	}
 
-    public void unbanTeamMember(String teamName, UUID pUUID) {
-        removeTeamMember(teamName, pUUID);
-    }
+	public void unbanTeamMember(String teamName, UUID pUUID) {
+		this.removeTeamMember(teamName, pUUID);
+	}
 
-    public void createConfig() {
-        File file = new File(pluginDirPath, "config.yml");
-        if (file.exists()) {
-            return;
-        }
+	public void createConfig() {
+		File file = new File(this.pluginDirPath, "config.yml");
+		if (file.exists()) {
+			return;
+		}
 
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-        cfg.set("webhook_url", "UNSET");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+		cfg.set("webhook_url", "UNSET");
 
-        try {
-            cfg.save(file);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+		try {
+			cfg.save(file);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    public String getWebhookURL() {
-        File file = new File(pluginDirPath, "config.yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-        return cfg.getString("webhook_url");
-    }
+	public String getWebhookURL() {
+		File file = new File(this.pluginDirPath, "config.yml");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+		return cfg.getString("webhook_url");
+	}
 }

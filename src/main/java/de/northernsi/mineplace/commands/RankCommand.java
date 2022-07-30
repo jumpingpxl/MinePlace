@@ -1,8 +1,6 @@
 package de.northernsi.mineplace.commands;
 
 import de.northernsi.mineplace.types.Rank;
-import de.northernsi.mineplace.utils.RankProvider;
-import de.northernsi.mineplace.utils.ScoreboardProvider;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,8 +10,8 @@ public class RankCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (commandSender instanceof Player && RankProvider.getInstance().getRank((Player) commandSender) != Rank.ADMIN
-                && !commandSender.isOp()) {
+        if (commandSender instanceof Player && UserService.getInstance().getRank(
+            (Player) commandSender) != Rank.ADMIN && !commandSender.isOp()) {
             commandSender.sendMessage("§cYou don't have the permission to execute this command!");
             return true;
         }
@@ -30,7 +28,7 @@ public class RankCommand implements CommandExecutor {
             case "mod":
             case "vip":
             case "guest":
-                RankProvider.getInstance().setRank(args[0], Rank.valueOf(args[1].toUpperCase()));
+                UserService.getInstance().setRank(args[0], Rank.valueOf(args[1].toUpperCase()));
                 ScoreboardProvider.getInstance().setScoreboard();
                 commandSender.sendMessage("§aSet rank of §e" + args[0] + " §ato §e" + args[1]);
                 break;

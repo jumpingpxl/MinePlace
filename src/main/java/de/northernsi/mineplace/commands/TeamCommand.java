@@ -1,8 +1,8 @@
 package de.northernsi.mineplace.commands;
 
 import de.northernsi.mineplace.MinePlace;
+import de.northernsi.mineplace.misc.labymod.LabyModAPI;
 import de.northernsi.mineplace.utils.ConfigHandler;
-import de.northernsi.mineplace.utils.LabyModAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
