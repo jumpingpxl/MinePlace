@@ -1,28 +1,22 @@
 package de.northernsi.mineplace.commands;
 
-import de.northernsi.mineplace.MinePlace;
-import de.northernsi.mineplace.misc.labymod.LabyModAPI;
-import de.northernsi.mineplace.utils.ConfigHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import de.northernsi.mineplace.services.command.Command;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+public class TeamCommand extends Command {
 
-public class TeamCommand implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (commandSender instanceof Player) {
+	@Override
+	protected void execute(Player player, String prefix, String[] args) {
+
+ /*       if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             UUID pUUID = player.getUniqueId();
             String teamName = ConfigHandler.getInstance().getTeamByUUID(pUUID);
             if (args.length >= 1) {
                 if (args.length == 1 && args[0].equalsIgnoreCase("delete")) {
                     if (teamName != null) {
-                        player.sendMessage("§4Danger! §cType §e/team delete confirm §cif you really want to delete your team (§e#" + teamName + "§c).");
+                        player.sendMessage("§4Danger! §cType §e/team delete confirm §cif you
+                        really want to delete your team (§e#" + teamName + "§c).");
                     } else {
                         player.sendMessage("§cYou're not in a team!");
                     }
@@ -36,14 +30,16 @@ public class TeamCommand implements CommandExecutor {
                         return false;
                     }
 
-                    if (!ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID).equals("owner")) {
+                    if (!ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID).equals
+                    ("owner")) {
                         player.sendMessage("§cYou're not the owner of this team!");
                         return false;
                     }
 
                     for (Player gop : Bukkit.getOnlinePlayers()) {
                         if (ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId()) != null
-                                && ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId()).equals(teamName)
+                                && ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId())
+                                .equals(teamName)
                                 && !gop.getUniqueId().equals(pUUID)) {
                             gop.sendMessage("§cYour team has been deleted by the owner.");
                             for (Player allPlayers : Bukkit.getOnlinePlayers()) {
@@ -68,14 +64,16 @@ public class TeamCommand implements CommandExecutor {
 
                     String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID);
                     if (tMRole.equals("owner")) {
-                        player.sendMessage("§cYou can't leave your own team! Delete it instead via §e/team delete§c.");
+                        player.sendMessage("§cYou can't leave your own team! Delete it instead
+                        via §e/team delete§c.");
                         return false;
                     }
 
                     ConfigHandler.getInstance().removeTeamMember(teamName, pUUID);
                     for (Player gop : Bukkit.getOnlinePlayers()) {
                         if (ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId()) != null
-                                && ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId()).equals(teamName)
+                                && ConfigHandler.getInstance().getTeamByUUID(gop.getUniqueId())
+                                .equals(teamName)
                                 && !gop.getUniqueId().equals(pUUID)) {
                             gop.sendMessage("§e" + player.getName() + " §cleft the team.");
                         }
@@ -109,13 +107,16 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        if (ConfigHandler.getInstance().getTeamByUUID(targetPlayer.getUniqueId()) != null) {
+                        if (ConfigHandler.getInstance().getTeamByUUID(targetPlayer.getUniqueId())
+                         != null) {
                             player.sendMessage("§cThat player is already in a team!");
                             return false;
                         }
 
-                        targetPlayer.sendMessage("§e" + player.getName() + " §ainvited you to join team §e#" + teamName + "§a.");
-                        player.sendMessage("§aSuccessfully invited §e" + targetPlayer.getName() + " §ato join your team.");
+                        targetPlayer.sendMessage("§e" + player.getName() + " §ainvited you to
+                        join team §e#" + teamName + "§a.");
+                        player.sendMessage("§aSuccessfully invited §e" + targetPlayer.getName() +
+                         " §ato join your team.");
 
                         return false;
                     }
@@ -132,9 +133,11 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID);
+                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName,
+                        pUUID);
                         if (!tMRole.equals("mod") && !tMRole.equals("owner")) {
-                            player.sendMessage("§cYou don't have the permission to execute this command!");
+                            player.sendMessage("§cYou don't have the permission to execute this
+                            command!");
                             return false;
                         }
 
@@ -149,7 +152,8 @@ public class TeamCommand implements CommandExecutor {
                         }
 
                         ConfigHandler.getInstance().banTeamMember(teamName, tOPlayer.getUniqueId());
-                        player.sendMessage("§aSuccessfully banned user §e" + tOPlayer.getName() + "§a.");
+                        player.sendMessage("§aSuccessfully banned user §e" + tOPlayer.getName() +
+                         "§a.");
                         for (Player gop : Bukkit.getOnlinePlayers()) {
                             LabyModAPI.sendSubtitle(gop, player, null);
                         }
@@ -168,9 +172,11 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID);
+                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName,
+                        pUUID);
                         if (!tMRole.equals("mod") && !tMRole.equals("owner")) {
-                            player.sendMessage("§cYou don't have the permission to execute this command!");
+                            player.sendMessage("§cYou don't have the permission to execute this
+                            command!");
                             return false;
                         }
 
@@ -184,8 +190,10 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        ConfigHandler.getInstance().unbanTeamMember(teamName, tOPlayer.getUniqueId());
-                        player.sendMessage("§aSuccessfully unbanned user §e" + tOPlayer.getName() + "§a.");
+                        ConfigHandler.getInstance().unbanTeamMember(teamName, tOPlayer
+                        .getUniqueId());
+                        player.sendMessage("§aSuccessfully unbanned user §e" + tOPlayer.getName()
+                         + "§a.");
 
                         return false;
                     }
@@ -201,9 +209,11 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID);
+                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName,
+                        pUUID);
                         if (!tMRole.equals("owner")) {
-                            player.sendMessage("§cYou don't have the permission to execute this command!");
+                            player.sendMessage("§cYou don't have the permission to execute this
+                            command!");
                             return false;
                         }
 
@@ -217,8 +227,10 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        ConfigHandler.getInstance().promoteTeamMember(teamName, tOPlayer.getUniqueId());
-                        player.sendMessage("§aSuccessfully promoted user §e" + tOPlayer.getName() + " §ato §eModerator§a.");
+                        ConfigHandler.getInstance().promoteTeamMember(teamName, tOPlayer
+                        .getUniqueId());
+                        player.sendMessage("§aSuccessfully promoted user §e" + tOPlayer.getName()
+                         + " §ato §eModerator§a.");
 
                         return false;
                     }
@@ -234,9 +246,11 @@ public class TeamCommand implements CommandExecutor {
                             return true;
                         }
 
-                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName, pUUID);
+                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(teamName,
+                        pUUID);
                         if (!tMRole.equals("owner")) {
-                            player.sendMessage("§cYou don't have the permission to execute this command!");
+                            player.sendMessage("§cYou don't have the permission to execute this
+                            command!");
                             return false;
                         }
 
@@ -250,8 +264,10 @@ public class TeamCommand implements CommandExecutor {
                             return false;
                         }
 
-                        ConfigHandler.getInstance().demoteTeamMember(teamName, tOPlayer.getUniqueId());
-                        player.sendMessage("§aSuccessfully demoted user §e" + tOPlayer.getName() + "§a.");
+                        ConfigHandler.getInstance().demoteTeamMember(teamName, tOPlayer
+                        .getUniqueId());
+                        player.sendMessage("§aSuccessfully demoted user §e" + tOPlayer.getName()
+                        + "§a.");
 
                         return false;
                     }
@@ -299,18 +315,22 @@ public class TeamCommand implements CommandExecutor {
                         }
 
                         if (!ConfigHandler.getInstance().existsTeam(args[1].replace("#", ""))) {
-                            player.sendMessage("§cTeam §e#" + args[1].replace("#", "") + " §cdoesn't exist!");
+                            player.sendMessage("§cTeam §e#" + args[1].replace("#", "") + "
+                            §cdoesn't exist!");
                             return false;
                         }
 
-                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(args[1].replace("#", ""), pUUID);
+                        String tMRole = ConfigHandler.getInstance().getTeamMemberRole(args[1]
+                        .replace("#", ""), pUUID);
                         if (tMRole != null) {
-                            player.sendMessage("§cYou're currently banned from team §e#" + args[1].replace("#", "") + "§c!" + tMRole);
+                            player.sendMessage("§cYou're currently banned from team §e#" +
+                            args[1].replace("#", "") + "§c!" + tMRole);
                             return false;
                         }
 
                         ConfigHandler.getInstance().addTeamMember(args[1].replace("#", ""), pUUID);
-                        player.sendMessage("§aSuccessfully joined team §e#" + args[1].replace("#", "") + "§a.");
+                        player.sendMessage("§aSuccessfully joined team §e#" + args[1].replace
+                        ("#", "") + "§a.");
                         for (Player gop : Bukkit.getOnlinePlayers()) {
                             LabyModAPI.sendSubtitle(gop, player, "§e#" + teamName);
                         }
@@ -329,13 +349,12 @@ public class TeamCommand implements CommandExecutor {
             player.sendMessage("§e/team unban <username>");
             player.sendMessage("§e/team promote <username>");
             player.sendMessage("§e/team demote <username>");
-            if (!MinePlace.getInstance().usersWithLM.contains(player.getUniqueId())) {
-                player.sendMessage("§7Please use LabyMod (https://labymod.net/download) to make our team system fully functional for your client.");
-            }
+            //if (!MinePlace.getInstance().usersWithLM.contains(player.getUniqueId())) {
+                player.sendMessage("§7Please use LabyMod (https://labymod.net/download) to make
+                our team system fully functional for your client.");
+           // }
 
             return true;
-        }
-
-        return false;
-    }
+        } */
+	}
 }

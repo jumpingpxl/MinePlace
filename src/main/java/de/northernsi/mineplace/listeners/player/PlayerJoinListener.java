@@ -21,5 +21,6 @@ public class PlayerJoinListener implements Listener {
 		Player player = event.getPlayer();
 		this.minePlace.scoreboardController().setTeam(player);
 		this.minePlace.tabListAccessor().sendTabPacket(player);
+		this.minePlace.inventoryController().setDefaultPage(player);
 	}
 }

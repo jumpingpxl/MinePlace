@@ -1,8 +1,9 @@
 package de.northernsi.mineplace.models;
 
+import de.northernsi.mineplace.misc.Rank;
 import de.northernsi.mineplace.misc.data.DataModel;
-import de.northernsi.mineplace.types.Rank;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class UserData extends DataModel {
 
 	private String team = null;

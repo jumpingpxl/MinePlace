@@ -3,7 +3,7 @@ package de.northernsi.mineplace.misc.minecraft;
 import com.google.common.collect.Maps;
 import de.northernsi.mineplace.MinePlace;
 import de.northernsi.mineplace.misc.Constants;
-import de.northernsi.mineplace.types.Rank;
+import de.northernsi.mineplace.misc.Rank;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;

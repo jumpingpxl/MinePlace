@@ -1,20 +1,14 @@
 package de.northernsi.mineplace.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import de.northernsi.mineplace.services.command.Command;
 import org.bukkit.entity.Player;
 
-public class RulesCommand implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+public class RulesCommand extends Command {
 
-            player.sendMessage("§aOur building and general behavior rules are accessible here: §ehttps://mineplace.space/rules");
-            return true;
-        }
-
-        return false;
-    }
+	@Override
+	protected void execute(Player player, String prefix, String[] args) {
+		player.sendMessage(
+				"§aOur building and general behavior rules are accessible here: §ehttps://mineplace"
+						+ ".space/rules");
+	}
 }

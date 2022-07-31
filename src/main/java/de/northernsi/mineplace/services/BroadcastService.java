@@ -4,17 +4,16 @@ import com.google.common.collect.Lists;
 import de.northernsi.mineplace.misc.Task;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 
 public class BroadcastService {
 
-	private final List<BaseComponent> broadcastMessages;
+	private final List<BaseComponent[]> broadcastMessages;
 	private final JavaPlugin javaPlugin;
 	private int lastBroadcastIndex;
 
-	private BukkitTask task;
+	private Task task;
 
 	public BroadcastService(JavaPlugin javaPlugin) {
 		this.javaPlugin = javaPlugin;
@@ -36,16 +35,15 @@ public class BroadcastService {
 			return;
 		}
 
-		this.lastBroadcastIndex++;
-		if (this.lastBroadcastIndex >= this.broadcastMessages.size()) {
+		if (++this.lastBroadcastIndex >= this.broadcastMessages.size()) {
 			this.lastBroadcastIndex = 0;
 		}
 
-		BaseComponent component = this.broadcastMessages.get(this.lastBroadcastIndex);
+		BaseComponent[] component = this.broadcastMessages.get(this.lastBroadcastIndex);
 		this.javaPlugin.getServer().spigot().broadcast(component);
 	}
 
-	public void addMessage(BaseComponent component) {
+	public void addMessage(BaseComponent[] component) {
 		this.broadcastMessages.add(component);
 	}
 }

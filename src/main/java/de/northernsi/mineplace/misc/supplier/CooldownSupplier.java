@@ -2,6 +2,7 @@ package de.northernsi.mineplace.misc.supplier;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import de.northernsi.mineplace.misc.Pair;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class CooldownSupplier {
 	private static final Map<Type, CooldownSupplier> COOLDOWN_SUPPLIERS = Maps.newHashMap();
 
 	private final Type type;
-	private final List<CooldownEntry> entries;
+	private final List<Pair<UUID, Long>> entries;
 
 	private CooldownSupplier(Type type) {
 		this.type = type;
@@ -30,19 +31,7 @@ public class CooldownSupplier {
 	}
 
 	public boolean has(UUID uniqueId) {
-		Optional<CooldownEntry> entry = this.getEntry(uniqueId);
-		if (!entry.isPresent()) {
-			return false;
-		}
-
-		CooldownEntry cooldownEntry = entry.get();
-		long cooldown = cooldownEntry.getTimestamp() + this.type.getCooldown();
-		boolean cooldownExpired = cooldown < System.currentTimeMillis();
-		if (cooldownExpired) {
-			this.entries.remove(cooldownEntry);
-		}
-
-		return !cooldownExpired;
+		return this.remainingTime(uniqueId) > 0;
 	}
 
 	public void add(Player player) {
@@ -50,7 +39,7 @@ public class CooldownSupplier {
 	}
 
 	public void add(UUID uniqueId) {
-		this.entries.add(new CooldownEntry(uniqueId, System.currentTimeMillis()));
+		this.entries.add(Pair.of(uniqueId, System.currentTimeMillis()));
 	}
 
 	public boolean remove(Player player) {
@@ -58,14 +47,34 @@ public class CooldownSupplier {
 	}
 
 	public boolean remove(UUID uniqueId) {
-		Optional<CooldownEntry> entry = this.getEntry(uniqueId);
+		Optional<Pair<UUID, Long>> entry = this.getEntry(uniqueId);
 		return entry.map(this.entries::remove).orElse(false);
 	}
 
-	private Optional<CooldownEntry> getEntry(UUID uniqueId) {
-		for (CooldownEntry entry : this.entries) {
-			if (entry.getUniqueId().equals(uniqueId)) {
-				return Optional.of(entry);
+	public long remainingTime(Player player) {
+		return this.remainingTime(player.getUniqueId());
+	}
+
+	public long remainingTime(UUID uniqueId) {
+		Optional<Pair<UUID, Long>> entry = this.getEntry(uniqueId);
+		if (!entry.isPresent()) {
+			return 0L;
+		}
+
+		Pair<UUID, Long> pair = entry.get();
+		long timestamp = pair.getSecond() + this.type.getCooldown();
+		long remainingTime = Math.max(0, timestamp - System.currentTimeMillis());
+		if (remainingTime == 0L) {
+			this.entries.remove(pair);
+		}
+
+		return remainingTime;
+	}
+
+	private Optional<Pair<UUID, Long>> getEntry(UUID uniqueId) {
+		for (Pair<UUID, Long> pair : this.entries) {
+			if (pair.getFirst().equals(uniqueId)) {
+				return Optional.of(pair);
 			}
 		}
 
@@ -89,25 +98,6 @@ public class CooldownSupplier {
 
 		public long getCooldown() {
 			return this.cooldown;
-		}
-	}
-
-	private static class CooldownEntry {
-
-		private final UUID uniqueId;
-		private final long timestamp;
-
-		public CooldownEntry(UUID uniqueId, long timestamp) {
-			this.uniqueId = uniqueId;
-			this.timestamp = timestamp;
-		}
-
-		public UUID getUniqueId() {
-			return this.uniqueId;
-		}
-
-		public long getTimestamp() {
-			return this.timestamp;
 		}
 	}
 }

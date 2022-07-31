@@ -1,24 +1,21 @@
 package de.northernsi.mineplace.commands;
 
-import de.northernsi.mineplace.types.Rank;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import de.northernsi.mineplace.services.command.Command;
 import org.bukkit.entity.Player;
 
-public class RankCommand implements CommandExecutor {
+public class RankCommand extends Command {
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (commandSender instanceof Player && UserService.getInstance().getRank(
-            (Player) commandSender) != Rank.ADMIN && !commandSender.isOp()) {
-            commandSender.sendMessage("§cYou don't have the permission to execute this command!");
-            return true;
+    protected void execute(Player player, String prefix, String[] args) {
+        if (/*UserService.getInstance().getRank(
+            (Player) commandSender) != Rank.ADMIN &&*/ !player.isOp()) {
+            player.sendMessage("§cYou don't have the permission to execute this command!");
+            return;
         }
 
         if (args.length < 2) {
-            commandSender.sendMessage("§cUsage: /rank <username> <rank>");
-            return true;
+            player.sendMessage("§cUsage: /rank <username> <rank>");
+            return;
         }
 
         args[1] = args[1].toLowerCase();
@@ -28,16 +25,15 @@ public class RankCommand implements CommandExecutor {
             case "mod":
             case "vip":
             case "guest":
-                UserService.getInstance().setRank(args[0], Rank.valueOf(args[1].toUpperCase()));
-                ScoreboardProvider.getInstance().setScoreboard();
-                commandSender.sendMessage("§aSet rank of §e" + args[0] + " §ato §e" + args[1]);
+                //UserService.getInstance().setRank(args[0], Rank.valueOf(args[1].toUpperCase()));
+                //ScoreboardProvider.getInstance().setScoreboard();
+                player.sendMessage("§aSet rank of §e" + args[0] + " §ato §e" + args[1]);
                 break;
             default:
-                commandSender.sendMessage("§cUnknown rank");
+                player.sendMessage("§cUnknown rank");
                 break;
         }
 
-        ScoreboardProvider.getInstance().setScoreboard();
-        return false;
+        //ScoreboardProvider.getInstance().setScoreboard();
     }
 }

@@ -1,6 +1,6 @@
 // Created by Torben R.
 
-package de.northernsi.mineplace.types;
+package de.northernsi.mineplace.misc;
 
 public enum Rank {
 	ADMIN(10, "Admin", 'c'),

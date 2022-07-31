@@ -1,9 +1,9 @@
 package de.northernsi.mineplace.listeners.player;
 
 import de.northernsi.mineplace.misc.Constants;
+import de.northernsi.mineplace.misc.Rank;
 import de.northernsi.mineplace.misc.supplier.CooldownSupplier;
 import de.northernsi.mineplace.services.UserService;
-import de.northernsi.mineplace.types.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
